@@ -5,6 +5,15 @@
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
   <link rel="stylesheet" href="css/styles.css">
   <title>Restaurant Reviews</title>
+  <meta name="description" content="Resatruant Reviews" />
+  <meta name="author" content="Patrick Schulteis">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta charset="utf-8">
+<script>
+  // Picture element HTML5 shiv
+  document.createElement("picture");
+</script>
+<script src="js/polyfills/picturefill.min.js" async></script>
 </head>
 
 <body>
@@ -12,6 +21,7 @@
     <nav>
       <h1><a href="/">Restaurant Reviews</a></h1>
     </nav>
+    <a href="#skip-google-maps" class="skip-link">Skip Google Maps</a>
   </header>
 
   <main id="maincontent">
@@ -19,12 +29,12 @@
       <div id="map"></div>
     </section>
     <section>
-      <div class="filter-options">
+      <div class="filter-options" id="skip-google-maps" tabindex="-1">
         <h2>Filter Results</h2>
-        <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
+        <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()" aria-label="Choose a Neihborhood">
           <option value="all">All Neighborhoods</option>
         </select>
-        <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
+        <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()" aria-label="Choose a Cuisine">
           <option value="all">All Cuisines</option>
         </select>
       </div>
@@ -32,10 +42,10 @@
     </section>
   </main>
 
-  <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
-  <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initMap"></script>
-
+  <script charset="utf-8" src="js/ServiceWorkerController.js"></script>
+  <script charset="utf-8" src="js/dbhelper.js"></script>
+  <script charset="utf-8" src="js/main.js"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjG6QaqllzSvib7BpFv9OP0o5IxoAT2Yo&libraries=places&callback=initMap"></script>
 
   <footer id="footer">
     Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.

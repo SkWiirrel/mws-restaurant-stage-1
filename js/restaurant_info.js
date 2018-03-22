@@ -55,9 +55,37 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
 
-  const image = document.getElementById('restaurant-img');
+  const imgName = DBHelper.imageNameForRestaurant(restaurant);
+
+  const picture_container = document.getElementById('restaurant-pic-container');
+  const picture = document.createElement('picture');
+
+  const source_small = document.createElement('source');
+  source_small.setAttribute('media', '(max-width:750px)');
+  source_small.setAttribute('srcset', `/img/${imgName}-650.jpg 1x, /img/${imgName}-800.jpg 2x`);
+
+  const source_large = document.createElement('source');
+  source_large.setAttribute('media', '(max-width:1200px)');
+  source_large.setAttribute('srcset', `/img/${imgName}-550.jpg 1x, /img/${imgName}-800.jpg 2x`);
+
+  const image = document.createElement('img');
+  image.src = `/img/${imgName}-800.jpg`;
+  image.className = 'restaurant-img';
+  image.id = 'restaurant-img';
+  image.alt = restaurant.name;
+
+
+    picture.append(source_small);
+    picture.append(source_large);
+    picture.append(image);
+    picture_container.append(picture);
+
+
+  /*const image = document.getElementById('restaurant-img');
+  image.alt = restaurant.name;
   image.className = 'restaurant-img'
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  */
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
@@ -95,7 +123,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const container = document.getElementById('reviews-container');
-  const title = document.createElement('h2');
+  const title = document.createElement('h3');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
 
@@ -117,21 +145,26 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
  */
 createReviewHTML = (review) => {
   const li = document.createElement('li');
-  const name = document.createElement('p');
+  const name = document.createElement('div');
+  name.className = 'reviews-author'
   name.innerHTML = review.name;
   li.appendChild(name);
 
-  const date = document.createElement('p');
+  const date = document.createElement('small');
+  date.className = 'reviews-date';
   date.innerHTML = review.date;
-  li.appendChild(date);
-
-  const rating = document.createElement('p');
-  rating.innerHTML = `Rating: ${review.rating}`;
-  li.appendChild(rating);
+  name.appendChild(date);
 
   const comments = document.createElement('p');
   comments.innerHTML = review.comments;
   li.appendChild(comments);
+
+  const rating = document.createElement('span');
+  rating.className = 'reviews-rating';
+  rating.title = `Rating: ${review.rating}`;
+  rating.setAttribute('aria-label', rating.title);
+  rating.innerHTML = '&#9733;'.repeat(parseInt(review.rating)); //star (pasting the symbol as string itself didn't work)
+  li.appendChild(rating);
 
   return li;
 }
@@ -139,7 +172,7 @@ createReviewHTML = (review) => {
 /**
  * Add restaurant name to the breadcrumb navigation menu
  */
-fillBreadcrumb = (restaurant=self.restaurant) => {
+fillBreadcrumb = (restaurant = self.restaurant) => {
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
   li.innerHTML = restaurant.name;
