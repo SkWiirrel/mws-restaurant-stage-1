@@ -142,6 +142,7 @@ createRestaurantHTML = (restaurant) => {
 
   const imgName = DBHelper.imageNameForRestaurant(restaurant);
 
+  const figure = document.createElement('figure');
   const picture = document.createElement('picture');
 
   const source_small = document.createElement('source');
@@ -160,17 +161,13 @@ createRestaurantHTML = (restaurant) => {
   picture.append(source_small);
   picture.append(source_large);
   picture.append(image);
+  figure.append(picture);
 
-  //image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  li.append(picture);
+  const caption = document.createElement('figcaption');
+  caption.innerHTML = `${restaurant.cuisine_type} Restaurant`;
+  figure.append(caption);
 
-  /*
-    const image = document.createElement('img');
-    image.className = 'restaurant-img';
-    image.alt = restaurant.name;
-    image.src = DBHelper.imageUrlForRestaurant(restaurant);
-    li.append(image);
-  */
+  li.append(figure);
 
   const info = document.createElement('div');
   info.className = 'restaurant-info';

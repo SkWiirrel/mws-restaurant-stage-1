@@ -1,4 +1,4 @@
-const staticCache = 'res-staticStuff-v4';
+const staticCache = 'res-staticStuff-v9';
 contentImgsCache = 'res-contentImgStuff';
 const allCaches = [
   staticCache,
@@ -50,9 +50,13 @@ self.addEventListener('fetch', function(event) {
 
   const requestUrl = new URL(event.request.url);
 
-  if (requestUrl.origin === location.origin && requestUrl.pathname.startsWith('/img/')) {
-    event.respondWith(serveImages(event.request));
-    return;
+  if (requestUrl.origin === location.origin) {
+
+    if (requestUrl.pathname.startsWith('/img/')) {
+      event.respondWith(serveImages(event.request));
+      return;
+    }
+
   }
 
   event.respondWith(

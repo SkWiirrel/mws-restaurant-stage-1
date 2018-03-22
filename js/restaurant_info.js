@@ -75,10 +75,10 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   image.alt = restaurant.name;
 
 
-    picture.append(source_small);
-    picture.append(source_large);
-    picture.append(image);
-    picture_container.append(picture);
+  picture.append(source_small);
+  picture.append(source_large);
+  picture.append(image);
+  picture_container.prepend(picture);
 
 
   /*const image = document.getElementById('restaurant-img');
@@ -88,7 +88,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   */
 
   const cuisine = document.getElementById('restaurant-cuisine');
-  cuisine.innerHTML = restaurant.cuisine_type;
+  cuisine.innerHTML = `${restaurant.cuisine_type} Restaurant`;
 
   // fill operating hours
   if (restaurant.operating_hours) {

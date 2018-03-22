@@ -46,6 +46,10 @@ select {
   cursor: pointer;
 }
 
+figure {
+  margin: 0;
+}
+
 #maincontent {
   background-color: #f3f3f3;
   min-height: 100%;
@@ -227,6 +231,12 @@ nav h1 a {
   text-transform: uppercase;
 }
 
+#restaurants-list figcaption {
+  text-align: right;
+  padding: 2px 10px;
+  font-style: italic;
+}
+
 /* ====================== Restaurant Details ====================== */
 
 .inside header {
@@ -245,6 +255,11 @@ nav h1 a {
   width: 100%;
   margin-top: 131px;
   height: 300px;
+}
+
+#restaurant-pic-container {
+  margin: 0;
+  width: 100%;
 }
 
 #restaurant-name {
