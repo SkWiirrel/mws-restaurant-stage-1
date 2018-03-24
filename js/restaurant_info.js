@@ -80,6 +80,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   picture.append(image);
   picture_container.prepend(picture);
 
+  document.getElementById('map-container').setAttribute('aria-label', `Google Maps showing ${restaurant.name}'s location`);
 
   /*const image = document.getElementById('restaurant-img');
   image.alt = restaurant.name;

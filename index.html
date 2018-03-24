@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+  <!-- Register and handle Service Worker -->
+  <script charset="utf-8" src="js/ServiceWorkerController.js"></script>
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
   <link rel="stylesheet" href="css/styles.css">
   <title>Restaurant Reviews</title>
@@ -18,20 +20,20 @@
 
 <body>
   <header>
-    <nav>
+    <nav id="header-navigation">
       <h1><a href="/">Restaurant Reviews</a></h1>
     </nav>
     <a href="#skip-google-maps" class="skip-link">Skip Google Maps</a>
   </header>
 
   <main id="maincontent">
-    <section id="map-container">
+    <section id="map-container" aria-role="application" aria-label="Google Maps with Restaurants">
       <div id="map"></div>
     </section>
     <section>
       <div class="filter-options" id="skip-google-maps" tabindex="-1">
         <h2>Filter Results</h2>
-        <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()" aria-label="Choose a Neihborhood">
+        <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()" aria-label="Choose a Neighborhood">
           <option value="all">All Neighborhoods</option>
         </select>
         <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()" aria-label="Choose a Cuisine">
@@ -42,7 +44,6 @@
     </section>
   </main>
 
-  <script charset="utf-8" src="js/ServiceWorkerController.js"></script>
   <script charset="utf-8" src="js/dbhelper.js"></script>
   <script charset="utf-8" src="js/main.js"></script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjG6QaqllzSvib7BpFv9OP0o5IxoAT2Yo&libraries=places&callback=initMap"></script>

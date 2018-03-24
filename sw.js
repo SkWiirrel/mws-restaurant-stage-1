@@ -1,4 +1,4 @@
-const staticCache = 'res-staticStuff-v9';
+const staticCache = 'res-staticStuff-v11';
 contentImgsCache = 'res-contentImgStuff';
 const allCaches = [
   staticCache,

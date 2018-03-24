@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+  <!-- Register and handle Service Worker -->
+  <script charset="utf-8" src="js/ServiceWorkerController.js"></script>
   <!-- Normalize.css for better cross-browser consistency -->
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
   <!-- Main CSS file -->
@@ -18,13 +20,15 @@
   <!-- Beginning header -->
   <header>
     <!-- Beginning nav -->
-    <nav>
+    <nav id="header-navigation">
       <h1><a href="/">Restaurant Reviews</a></h1>
+      <!-- Beginning breadcrumb -->
     </nav>
-    <!-- Beginning breadcrumb -->
-    <ul id="breadcrumb">
-      <li><a href="/">Home</a></li>
-    </ul>
+    <nav id="breadcrumb-navigation">
+      <ul id="breadcrumb">
+        <li><a href="/">Home</a></li>
+      </ul>
+    </nav>
     <!-- End breadcrumb -->
     <!-- End nav -->
     <a href="#skip-google-maps" class="skip-link">Skip Google Maps</a>
@@ -34,7 +38,7 @@
   <!-- Beginning main -->
   <main id="maincontent">
     <!-- Beginning map -->
-    <section id="map-container">
+    <section id="map-container" aria-role="application" aria-label="Google Maps">
       <div id="map"></div>
     </section>
     <!-- End map -->
@@ -71,7 +75,6 @@
   <!-- End footer -->
 
   <!-- Beginning scripts -->
-  <script charset="utf-8" src="js/ServiceWorkerController.js"></script>
   <!-- Database helpers -->
   <script src="js/dbhelper.js"></script>
   <!-- Main javascript file -->
