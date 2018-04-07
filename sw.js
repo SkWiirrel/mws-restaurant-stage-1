@@ -1,4 +1,4 @@
-const staticCache = 'res-staticStuff-v11';
+const staticCache = 'res-staticStuff-v12';
 contentImgsCache = 'res-contentImgStuff';
 const allCaches = [
   staticCache,
@@ -15,11 +15,10 @@ self.addEventListener('install', function(event) {
     caches.open(staticCache).then(function(cache) {
       return cache.addAll([
         'css/styles.css',
-        'js/dbhelper.js',
+        'js/commons.js',
         'js/restaurant_info.js',
         'js/main.js',
-        'js/ServiceWorkerController.js',
-        'js/polyfills/picturefill.min.js'
+        'js/picturefill.min.js'
       ]);
     })
   );

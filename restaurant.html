@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <!-- Register and handle Service Worker -->
-  <script charset="utf-8" src="js/ServiceWorkerController.js"></script>
   <!-- Normalize.css for better cross-browser consistency -->
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
   <!-- Main CSS file -->
@@ -13,7 +11,7 @@
     // Picture element HTML5 shiv
     document.createElement("picture");
   </script>
-  <script src="js/polyfills/picturefill.min.js" async></script>
+  <script src="js/picturefill.min.js" async></script>
 </head>
 
 <body class="inside">
@@ -76,7 +74,7 @@
 
   <!-- Beginning scripts -->
   <!-- Database helpers -->
-  <script src="js/dbhelper.js"></script>
+  <script src="js/commons.js"></script>
   <!-- Main javascript file -->
   <script src="js/restaurant_info.js"></script>
   <!-- Google Maps -->
