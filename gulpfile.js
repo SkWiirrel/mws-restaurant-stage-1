@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 const gulp = require('gulp');
 const sass = require('gulp-sass');
 const autoprefixer = require('gulp-autoprefixer');
@@ -27,7 +28,7 @@ gulp.task('dist', [
 ]);
 
 gulp.task('scripts', function() {
-  gulp.src(['js/dbhelper.js', 'js/ServiceWorkerController.js'])
+  gulp.src(['js/lib/*.js', 'js/dbhelper.js', 'js/ServiceWorkerController.js'])
     .pipe(concat('commons.js'))
     .pipe(gulp.dest('dist/js'))
     .pipe(browserSync.stream());
@@ -43,29 +44,31 @@ gulp.task('scripts', function() {
 
 gulp.task('scripts-dist', function() {
 
-  gulp.src(['js/dbhelper.js', 'js/ServiceWorkerController.js'])
-    .pipe(concat('commons.js'))
+  const dest = 'dist/js';
+
+  gulp.src(['js/lib/*.js', 'js/dbhelper.js', 'js/ServiceWorkerController.js'])
     .pipe(sourcemaps.init())
     .pipe(babel({
-      presets: ['env']
+      presets: ['es2015']
     }))
     .pipe(uglify())
+    .pipe(concat('commons.js'))
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest('dist/js'));
+    .pipe(gulp.dest(dest));
 
   gulp.src(['js/main.js', 'js/restaurant_info.js', 'js/polyfills/*.js'])
     .pipe(sourcemaps.init())
     .pipe(babel({
-      presets: ['env']
+      presets: ['es2015']
     }))
     .pipe(uglify())
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest('dist/js'));
+    .pipe(gulp.dest(dest));
 
   gulp.src('sw.js')
     .pipe(sourcemaps.init())
     .pipe(babel({
-      presets: ['env']
+      presets: ['es2015']
     }))
     .pipe(uglify())
     .pipe(sourcemaps.write())

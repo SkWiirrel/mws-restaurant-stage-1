@@ -1,5 +1,7 @@
-const staticCache = 'res-staticStuff-v12';
-contentImgsCache = 'res-contentImgStuff';
+/*jshint esversion: 6 */
+
+const staticCache = 'res-staticStuff-v15';
+const contentImgsCache = 'res-contentImgStuff';
 const allCaches = [
   staticCache,
   contentImgsCache
@@ -14,6 +16,7 @@ self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(staticCache).then(function(cache) {
       return cache.addAll([
+        '/',
         'css/styles.css',
         'js/commons.js',
         'js/restaurant_info.js',
@@ -73,7 +76,7 @@ self.addEventListener('fetch', function(event) {
  * But storageUrl has the -500.jpg bit missing
  * We store one copy of each avatar
  */
-serveImages = (request) => {
+const serveImages = (request) => {
 
   var storageUrl = request.url.replace(/-\d{3}.jpg$/, '') + '.jpg';
 
