@@ -1,2 +1,91 @@
-"use strict";var staticCache="res-staticStuff-v15",contentImgsCache="res-contentImgStuff",allCaches=[staticCache,contentImgsCache];self.addEventListener("install",function(t){t.waitUntil(caches.open(staticCache).then(function(t){return t.addAll(["/","css/styles.css","js/commons.js","js/restaurant_info.js","js/main.js","js/picturefill.min.js"])}))}),self.addEventListener("activate",function(t){t.waitUntil(caches.keys().then(function(t){return Promise.all(t.filter(function(t){return t.startsWith("res-")&&!allCaches.includes(t)}).map(function(t){return caches.delete(t)}))}))}),self.addEventListener("fetch",function(e){var t=new URL(e.request.url);t.origin===location.origin&&t.pathname.startsWith("/img/")?e.respondWith(serveImages(e.request)):e.respondWith(caches.match(e.request).then(function(t){return t||fetch(e.request)}))});var serveImages=function(n){var s=n.url.replace(/-\d{3}.jpg$/,"")+".jpg";return caches.open(contentImgsCache).then(function(e){return e.match(s).then(function(t){return t||fetch(n).then(function(t){return e.put(s,t.clone()),t})})})};
-//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInN3LmpzIl0sIm5hbWVzIjpbInN0YXRpY0NhY2hlIiwiY29udGVudEltZ3NDYWNoZSIsImV2ZW50IiwiY2FjaGVzIiwid2FpdFVudGlsIiwib3BlbiIsInRoZW4iLCJjYWNoZSIsImFkZEFsbCIsImFkZEV2ZW50TGlzdGVuZXIiLCJzZWxmIiwiY2FjaGVzTmFtZXMiLCJQcm9taXNlIiwiYWxsIiwicmVxdWVzdFVybCIsImZpbHRlciIsInJlcXVlc3QiLCJjYWNoZU5hbWUiLCJzdGFydHNXaXRoIiwiYWxsQ2FjaGVzIiwiaW5jbHVkZXMiLCJkZWxldGUiLCJVUkwiLCJ1cmwiLCJvcmlnaW4iLCJsb2NhdGlvbiIsInBhdGhuYW1lIiwicmVzcG9uZFdpdGgiLCJzZXJ2ZUltYWdlcyIsIm1hdGNoIiwicmVzcG9uc2UiLCJzdG9yYWdlVXJsIiwibmV0d29ya1Jlc3BvbnNlIiwicmVwbGFjZSIsImZldGNoIiwicHV0IiwiY2xvbmUiXSwibWFwcGluZ3MiOiJhQUFBLElBQUFBLFlBQUEsc0JBR01DLGlCQUFtQixzQkFEbkJELFVBQWMsQ0FDcEJBLFlBQ0FDLGtCQVdFQyxLQUFBQSxpQkFDRUMsVUFBWUgsU0FBWkUsR0FTQ0EsRUFWSEUsVUFGRkQsT0FBQUUsS0FBQUwsYUFBQU0sS0FBQSxTQUFBQyxHQUlNLE9BQU9BLEVBQU1DLE9BQU8sQ0FZMUIsSUFWUSxpQkFDQSxnQkFZSEMsd0JBQ0dMLGFBRUYsK0JBSE5NLEtBQUtELGlCQUFpQixXQUFZLFNBQVNQLEdBQ3pDQSxFQUFNRSxVQWlCUk0sT0FBS0QsT0FBQUEsS0FBaUIsU0FBU0UsR0FmekIsT0FBT0MsUUFBUUMsSUFpQmJDLEVBQWFDLE9BQVFiLFNBQU1jLEdBZnpCLE9BQU9DLEVBQVVDLFdBQVcsVUFBWUMsVUFBVUMsU0FBU0gsS0FpQi9ESCxJQUFBQSxTQUFBRyxHQWZJLE9BQU9kLE9BQU9rQixPQUFPSixXQVcvQlAsS0FBS0QsaUJBQWlCLFFBQVMsU0FBU1AsR0FFdEMsSUFBTVksRUFBYSxJQUFJUSxJQUFJcEIsRUFBTWMsUUFBUU8sS0FFckNULEVBQVdVLFNBQVdDLFNBQVNELFFBRTdCVixFQUFXWSxTQUFTUixXQUFXLFNBQ2pDaEIsRUFBTXlCLFlBQVlDLFlBQVkxQixFQUFNYyxVQTBCdENkLEVBQUF5QixZQUNFeEIsT0FBQTBCLE1BQU9DLEVBQUFBLFNBQWtCZCxLQUFBQSxTQUFjYyxHQUNyQ3ZCLE9BQUFBLEdBQVV3QixNQUFZQyxFQUFBQSxjQVA5QixJQUFNSixZQUFjLFNBQUNaLEdBRW5CLElBQUllLEVBQWFmLEVBQVFPLElBQUlVLFFBQVEsY0FBZSxJQUFNLE9BRTFELE9BQU85QixPQUFPRSxLQUFLSixrQkFBa0JLLEtBQUssU0FBU0MsR0FDakQsT0FBT0EsRUFBTXNCLE1BQU1FLEdBQVl6QixLQUFLLFNBQVN3QixHQUMzQyxPQUFPQSxHQUFZSSxNQUFNbEIsR0FBU1YsS0FBSyxTQUFTMEIsR0FFOUMsT0FEQXpCLEVBQU00QixJQUFJSixFQUFZQyxFQUFnQkksU0FDL0JKIiwiZmlsZSI6InN3LmpzIiwic291cmNlc0NvbnRlbnQiOlsiLypqc2hpbnQgZXN2ZXJzaW9uOiA2ICovXHJcblxyXG5jb25zdCBzdGF0aWNDYWNoZSA9ICdyZXMtc3RhdGljU3R1ZmYtdjE1JztcclxuY29uc3QgY29udGVudEltZ3NDYWNoZSA9ICdyZXMtY29udGVudEltZ1N0dWZmJztcclxuY29uc3QgYWxsQ2FjaGVzID0gW1xyXG4gIHN0YXRpY0NhY2hlLFxyXG4gIGNvbnRlbnRJbWdzQ2FjaGVcclxuXTtcclxuXHJcblxyXG4vKipcclxuICogTGlzdGVuIHRvIHRoZSBpbnN0YWxsIGV2ZW50IGFuZCBjYWNoZSBzdGF0aWMgaXRlbXNcclxuICovXHJcbnNlbGYuYWRkRXZlbnRMaXN0ZW5lcignaW5zdGFsbCcsIGZ1bmN0aW9uKGV2ZW50KSB7XHJcblxyXG4gIGV2ZW50LndhaXRVbnRpbChcclxuICAgIGNhY2hlcy5vcGVuKHN0YXRpY0NhY2hlKS50aGVuKGZ1bmN0aW9uKGNhY2hlKSB7XHJcbiAgICAgIHJldHVybiBjYWNoZS5hZGRBbGwoW1xyXG4gICAgICAgICcvJyxcclxuICAgICAgICAnY3NzL3N0eWxlcy5jc3MnLFxyXG4gICAgICAgICdqcy9jb21tb25zLmpzJyxcclxuICAgICAgICAnanMvcmVzdGF1cmFudF9pbmZvLmpzJyxcclxuICAgICAgICAnanMvbWFpbi5qcycsXHJcbiAgICAgICAgJ2pzL3BpY3R1cmVmaWxsLm1pbi5qcydcclxuICAgICAgXSk7XHJcbiAgICB9KVxyXG4gICk7XHJcbn0pO1xyXG5cclxuLyoqXHJcbiAqIExpc3RlbiB0byB0aGUgYWN0aXZhdGUgZXZlbnQgYW5kIGRlbGV0ZSBvbGRlciBjYWNoZSB2ZXJzaW9uc1xyXG4gKi9cclxuc2VsZi5hZGRFdmVudExpc3RlbmVyKCdhY3RpdmF0ZScsIGZ1bmN0aW9uKGV2ZW50KSB7XHJcbiAgZXZlbnQud2FpdFVudGlsKFxyXG4gICAgY2FjaGVzLmtleXMoKS50aGVuKGZ1bmN0aW9uKGNhY2hlc05hbWVzKSB7XHJcbiAgICAgIHJldHVybiBQcm9taXNlLmFsbChcclxuICAgICAgICBjYWNoZXNOYW1lcy5maWx0ZXIoZnVuY3Rpb24oY2FjaGVOYW1lKSB7XHJcbiAgICAgICAgICByZXR1cm4gY2FjaGVOYW1lLnN0YXJ0c1dpdGgoJ3Jlcy0nKSAmJiAhYWxsQ2FjaGVzLmluY2x1ZGVzKGNhY2hlTmFtZSk7XHJcbiAgICAgICAgfSkubWFwKGZ1bmN0aW9uKGNhY2hlTmFtZSkge1xyXG4gICAgICAgICAgcmV0dXJuIGNhY2hlcy5kZWxldGUoY2FjaGVOYW1lKTtcclxuICAgICAgICB9KVxyXG4gICAgICApO1xyXG4gICAgfSlcclxuICApO1xyXG59KTtcclxuXHJcblxyXG4vKipcclxuICogTGlzdGVuIHRvIHRoZSBmZXRjaCBldmVudCBhbmQgdHJ5IHRvIGdldCBpdGVtcyBmcm9tIHRoZSBjYWNoZSBpZiBwb3NzaWJsZVxyXG4gKi9cclxuc2VsZi5hZGRFdmVudExpc3RlbmVyKCdmZXRjaCcsIGZ1bmN0aW9uKGV2ZW50KSB7XHJcblxyXG4gIGNvbnN0IHJlcXVlc3RVcmwgPSBuZXcgVVJMKGV2ZW50LnJlcXVlc3QudXJsKTtcclxuXHJcbiAgaWYgKHJlcXVlc3RVcmwub3JpZ2luID09PSBsb2NhdGlvbi5vcmlnaW4pIHtcclxuXHJcbiAgICBpZiAocmVxdWVzdFVybC5wYXRobmFtZS5zdGFydHNXaXRoKCcvaW1nLycpKSB7XHJcbiAgICAgIGV2ZW50LnJlc3BvbmRXaXRoKHNlcnZlSW1hZ2VzKGV2ZW50LnJlcXVlc3QpKTtcclxuICAgICAgcmV0dXJuO1xyXG4gICAgfVxyXG5cclxuICB9XHJcblxyXG4gIGV2ZW50LnJlc3BvbmRXaXRoKFxyXG4gICAgY2FjaGVzLm1hdGNoKGV2ZW50LnJlcXVlc3QpLnRoZW4oZnVuY3Rpb24ocmVzcG9uc2UpIHtcclxuICAgICAgcmV0dXJuIHJlc3BvbnNlIHx8IGZldGNoKGV2ZW50LnJlcXVlc3QpO1xyXG4gICAgfSlcclxuICApO1xyXG59KTtcclxuXHJcblxyXG4vKipcclxuICogSGVscGVyIGZ1bmN0aW9uIHRvIHNlcnZlIGltYWdlc1xyXG4gKiBJbWFnZSB1cmxzIGxvb2sgbGlrZTpcclxuICogaW1nLzEtNTAwLmpwZ1xyXG4gKiBCdXQgc3RvcmFnZVVybCBoYXMgdGhlIC01MDAuanBnIGJpdCBtaXNzaW5nXHJcbiAqIFdlIHN0b3JlIG9uZSBjb3B5IG9mIGVhY2ggYXZhdGFyXHJcbiAqL1xyXG5jb25zdCBzZXJ2ZUltYWdlcyA9IChyZXF1ZXN0KSA9PiB7XHJcblxyXG4gIHZhciBzdG9yYWdlVXJsID0gcmVxdWVzdC51cmwucmVwbGFjZSgvLVxcZHszfS5qcGckLywgJycpICsgJy5qcGcnO1xyXG5cclxuICByZXR1cm4gY2FjaGVzLm9wZW4oY29udGVudEltZ3NDYWNoZSkudGhlbihmdW5jdGlvbihjYWNoZSkge1xyXG4gICAgcmV0dXJuIGNhY2hlLm1hdGNoKHN0b3JhZ2VVcmwpLnRoZW4oZnVuY3Rpb24ocmVzcG9uc2UpIHtcclxuICAgICAgcmV0dXJuIHJlc3BvbnNlIHx8IGZldGNoKHJlcXVlc3QpLnRoZW4oZnVuY3Rpb24obmV0d29ya1Jlc3BvbnNlKSB7XHJcbiAgICAgICAgY2FjaGUucHV0KHN0b3JhZ2VVcmwsIG5ldHdvcmtSZXNwb25zZS5jbG9uZSgpKTtcclxuICAgICAgICByZXR1cm4gbmV0d29ya1Jlc3BvbnNlO1xyXG4gICAgICB9KTtcclxuICAgIH0pO1xyXG4gIH0pO1xyXG59OyJdfQ==
+/*jshint esversion: 6 */
+
+const staticCache = 'res-staticStuff-v19';
+const contentImgsCache = 'res-contentImgStuff';
+const allCaches = [
+  staticCache,
+  contentImgsCache
+];
+
+
+/**
+ * Listen to the install event and cache static items
+ */
+self.addEventListener('install', function(event) {
+
+  event.waitUntil(
+    caches.open(staticCache).then(function(cache) {
+      return cache.addAll([
+        '/',
+        'css/styles.css',
+        'js/commons.js',
+        'js/restaurant_info.js',
+        'js/main.js',
+        'js/picturefill.min.js'
+      ]);
+    })
+  );
+});
+
+/**
+ * Listen to the activate event and delete older cache versions
+ */
+self.addEventListener('activate', function(event) {
+  event.waitUntil(
+    caches.keys().then(function(cachesNames) {
+      return Promise.all(
+        cachesNames.filter(function(cacheName) {
+          return cacheName.startsWith('res-') && !allCaches.includes(cacheName);
+        }).map(function(cacheName) {
+          return caches.delete(cacheName);
+        })
+      );
+    })
+  );
+});
+
+
+/**
+ * Listen to the fetch event and try to get items from the cache if possible
+ */
+self.addEventListener('fetch', function(event) {
+
+  const requestUrl = new URL(event.request.url);
+
+  if (requestUrl.origin === location.origin) {
+
+    if (requestUrl.pathname.startsWith('/img/')) {
+      event.respondWith(serveImages(event.request));
+      return;
+    }
+
+  }
+
+  event.respondWith(
+    caches.match(event.request).then(function(response) {
+      return response || fetch(event.request);
+    })
+  );
+});
+
+
+/**
+ * Helper function to serve images
+ * Image urls look like:
+ * img/1-500.jpg
+ * But storageUrl has the -500.jpg bit missing
+ * We store one copy of each avatar
+ */
+const serveImages = (request) => {
+
+  var storageUrl = request.url.replace(/-\d{3}.jpg$/, '') + '.jpg';
+
+  return caches.open(contentImgsCache).then(function(cache) {
+    return cache.match(storageUrl).then(function(response) {
+      return response || fetch(request).then(function(networkResponse) {
+        cache.put(storageUrl, networkResponse.clone());
+        return networkResponse;
+      });
+    });
+  });
+};

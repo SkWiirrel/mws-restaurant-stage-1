@@ -12,6 +12,7 @@ const clean = require('gulp-clean');
 
 gulp.task('default', ['copy-html', 'styles', 'scripts'], function() {
   gulp.watch('sass/**/*.scss', ['styles']);
+  gulp.watch(['js/**/*.js', 'sw.js'], ['scripts']);
   gulp.watch('*.html', ['copy-html']);
   gulp.watch('dist/*.html').on('change', browserSync.reload);
 

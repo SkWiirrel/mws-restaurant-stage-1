@@ -350,6 +350,7 @@ figure {
   padding: 5px;
   border-top-left-radius: 2px;
   letter-spacing: 3px;
+  font-size:18px;
 }
 
 #reviews-list .reviews-author {
@@ -365,7 +366,7 @@ figure {
   margin-left: 5px;
 }
 
-#restaurant-hours {
+#restaurant-hours:not(:empty) {
   background: #fff;
   padding: 8px 10px;
 }
