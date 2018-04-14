@@ -77,7 +77,7 @@ gulp.task('scripts-dist', function() {
 });
 
 gulp.task('copy-html', function() {
-  gulp.src('./*.html')
+  gulp.src(['./*.html', './favicon.ico'])
     .pipe(gulp.dest('./dist'));
 });
 
@@ -94,13 +94,16 @@ gulp.task('images', function() {
     .pipe(responsive({
       '*': [{
         width: 550,
-        suffix: '-550'
+        suffix: '-550',
+        quality: 65
       }, {
         width: 650,
-        suffix: '-650'
+        suffix: '-650',
+        quality: 65
       }, {
         width: 800,
-        suffix: '-800'
+        suffix: '-800',
+        quality: 65
       }]
     }))
     .pipe(gulp.dest(dest));

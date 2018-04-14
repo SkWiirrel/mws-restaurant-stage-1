@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 
-const staticCache = 'res-staticStuff-v19';
+const staticCache = 'res-staticStuff-v20';
 const contentImgsCache = 'res-contentImgStuff';
 const allCaches = [
   staticCache,
@@ -18,10 +18,14 @@ self.addEventListener('install', function(event) {
       return cache.addAll([
         '/',
         'css/styles.css',
+        'css/styles-min-w-750.css',
+        'css/styles-min-w-1200.css',
+        'css/styles.css',
         'js/commons.js',
         'js/restaurant_info.js',
         'js/main.js',
-        'js/picturefill.min.js'
+        'js/picturefill.min.js',
+        'js/intersection-observer.js'
       ]);
     })
   );

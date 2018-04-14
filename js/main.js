@@ -8,6 +8,34 @@ let markers = [];
 const dbHelper = new DBHelper();
 
 /**
+ * Only load images when they become visible in the viewport
+ */
+const intersectionObservationCallback = (entries, observer) => {
+
+  entries
+    .filter(entry => entry.isIntersecting)
+    .forEach(entry => {
+
+      const sources = entry.target.querySelectorAll('source[data-srcset]');
+      const img = entry.target.querySelector('img[data-src]');
+
+      sources.forEach(source => {
+        source.setAttribute('srcset', source.getAttribute('data-srcset'));
+        source.removeAttribute('data-srcset');
+      });
+
+      img.setAttribute('src', img.getAttribute('data-src'));
+      img.removeAttribute('data-src');
+
+      observer.unobserve(entry.target);
+    });
+};
+
+const intersectionObserver = new IntersectionObserver(
+  intersectionObservationCallback
+);
+
+/**
  * Fetch all neighborhoods and set their HTML.
  */
 const fetchNeighborhoods = () => {
@@ -85,11 +113,8 @@ const updateRestaurants = () => {
   const cSelect = document.getElementById('cuisines-select');
   const nSelect = document.getElementById('neighborhoods-select');
 
-  const cIndex = cSelect.selectedIndex;
-  const nIndex = nSelect.selectedIndex;
-
-  const cuisine = cSelect[cIndex].value;
-  const neighborhood = nSelect[nIndex].value;
+  const cuisine = cSelect[cSelect.selectedIndex].value;
+  const neighborhood = nSelect[nSelect.selectedIndex].value;
 
   dbHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (ok, restaurants) => {
     if (!ok) { // Got an error!
@@ -108,8 +133,10 @@ const resetRestaurants = (restaurants) => {
   // Remove all restaurants
   self.restaurants = [];
   const ul = document.getElementById('restaurants-list');
-  ul.innerHTML = '';
 
+  const pictures = ul.querySelectorAll('picture');
+  pictures.forEach(picture => intersectionObserver.unobserve(picture));
+  ul.innerHTML = '';
 
   // Remove all map markers
   if (self.markers) {
@@ -144,14 +171,14 @@ const createRestaurantHTML = (restaurant) => {
 
   const source_small = document.createElement('source');
   source_small.setAttribute('media', '(max-width:750px)');
-  source_small.setAttribute('srcset', `/img/${imgName}-650.jpg 1x, /img/${imgName}-800.jpg 2x`);
+  source_small.setAttribute('data-srcset', `/img/${imgName}-650.jpg 1x, /img/${imgName}-800.jpg 2x`);
 
   const source_large = document.createElement('source');
   source_large.setAttribute('media', '(max-width:1200px)');
-  source_large.setAttribute('srcset', `/img/${imgName}-550.jpg 1x, /img/${imgName}-800.jpg 2x`);
+  source_large.setAttribute('data-srcset', `/img/${imgName}-550.jpg 1x, /img/${imgName}-800.jpg 2x`);
 
   const image = document.createElement('img');
-  image.src = `/img/${imgName}-800.jpg`;
+  image.setAttribute('data-src', `/img/${imgName}-800.jpg`);
   image.className = 'restaurant-img';
   image.alt = restaurant.name;
 
@@ -159,6 +186,8 @@ const createRestaurantHTML = (restaurant) => {
   picture.append(source_large);
   picture.append(image);
   figure.append(picture);
+
+  intersectionObserver.observe(picture);
 
   const caption = document.createElement('figcaption');
   caption.innerHTML = `${restaurant.cuisine_type} Restaurant`;

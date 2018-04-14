@@ -1,0 +1,35 @@
+  #restaurants-list li {
+    width: calc(33.33% - (10px * 2));
+  }
+  .inside #map-container {
+    background: blue none repeat scroll 0 0;
+    height: calc(100% - 80px);
+    margin: 0;
+    position: fixed;
+    right: 0;
+    top: 80px;
+    width: 50%;
+  }
+  #breadcrumb {
+    width: calc(50% - 80px);
+  }
+  .inside #footer {
+    bottom: 0;
+    position: absolute;
+    width: calc(50% - 50px);
+  }
+  #restaurant-container, #reviews-container {
+    width: calc(50% - (30px * 2));
+  }
+  #restaurant-container {
+    padding-top: 140px;
+  }
+  #reviews-container {
+    padding-bottom: 64px;
+  }
+  .restaurant-section {
+    width: 100%;
+  }
+  #restraunt-location {
+    margin: 0;
+  }

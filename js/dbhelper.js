@@ -208,7 +208,7 @@ class DBHelper {
   }
 
   imageNameForRestaurant(restaurant) {
-    return (restaurant.photograph || '1.jpg').replace(/\.jpg$/, '');
+    return (restaurant.photograph || '5.jpg').replace(/\.jpg$/, '');
   }
 
   /**
