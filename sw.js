@@ -17,6 +17,7 @@ self.addEventListener('install', function(event) {
     caches.open(staticCache).then(function(cache) {
       return cache.addAll([
         '/',
+        '/manifest/manifest.json',
         'css/styles.css',
         'css/styles-min-w-750.css',
         'css/styles-min-w-1200.css',

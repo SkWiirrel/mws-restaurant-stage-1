@@ -10,19 +10,20 @@ const sourcemaps = require('gulp-sourcemaps');
 const responsive = require('gulp-responsive-images');
 const clean = require('gulp-clean');
 
-gulp.task('default', ['copy-html', 'styles', 'scripts'], function() {
+gulp.task('default', ['copy-html-and-assets', 'styles', 'scripts'], function() {
   gulp.watch('sass/**/*.scss', ['styles']);
   gulp.watch(['js/**/*.js', 'sw.js'], ['scripts']);
-  gulp.watch('*.html', ['copy-html']);
+  gulp.watch('*.html', ['copy-html-and-assets']);
   gulp.watch('dist/*.html').on('change', browserSync.reload);
 
   browserSync.init({
-    server: './dist'
+    server: './dist',
+    https: true
   });
 });
 
 gulp.task('dist', [
-  'copy-html',
+  'copy-html-and-assets',
   'images',
   'styles',
   'scripts-dist'
@@ -76,8 +77,11 @@ gulp.task('scripts-dist', function() {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('copy-html', function() {
+gulp.task('copy-html-and-assets', function() {
   gulp.src(['./*.html', './favicon.ico'])
+    .pipe(gulp.dest('./dist'));
+
+  gulp.src(['./manifest/*'])
     .pipe(gulp.dest('./dist'));
 });
 
