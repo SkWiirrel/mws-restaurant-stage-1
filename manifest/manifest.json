@@ -3,12 +3,17 @@
   "name": "Restaurant Reviews",
   "icons": [
     {
+      "src":"squirrel512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
       "src":"squirrel256x256.png",
       "sizes": "256x256",
       "type": "image/png"
     }
   ],
-  "start_url": "/?utm_source=homescreen",
+  "start_url": "../index.html?utm_source=homescreen",
   "background_color": "#fdfdfd",
   "theme_color": "#252831",
   "display": "standalone"

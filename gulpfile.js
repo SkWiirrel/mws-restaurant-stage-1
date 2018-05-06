@@ -58,7 +58,11 @@ gulp.task('scripts-dist', function() {
     .pipe(sourcemaps.write())
     .pipe(gulp.dest(dest));
 
-  gulp.src(['js/main.js', 'js/restaurant_info.js', 'js/polyfills/*.js'])
+  gulp.src(['js/polyfills/*.js'])
+    .pipe(uglify())
+    .pipe(gulp.dest(dest));
+
+  gulp.src(['js/main.js', 'js/restaurant_info.js'])
     .pipe(sourcemaps.init())
     .pipe(babel({
       presets: ['es2015']
@@ -82,7 +86,7 @@ gulp.task('copy-html-and-assets', function() {
     .pipe(gulp.dest('./dist'));
 
   gulp.src(['./manifest/*'])
-    .pipe(gulp.dest('./dist'));
+    .pipe(gulp.dest('./dist/manifest'));
 });
 
 

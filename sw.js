@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 
-const staticCache = 'res-staticStuff-v20';
+const staticCache = 'res-staticStuff-v22';
 const contentImgsCache = 'res-contentImgStuff';
 const allCaches = [
   staticCache,
