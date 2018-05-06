@@ -77,14 +77,14 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
 
     const source_small = document.createElement('source');
     source_small.setAttribute('media', '(max-width:750px)');
-    source_small.setAttribute('srcset', `/img/${imgName}-650.jpg 1x, /img/${imgName}-800.jpg 2x`);
+    source_small.setAttribute('srcset', `/img/${imgName}-650.webp 1x, /img/${imgName}-800.webp 2x`);
 
     const source_large = document.createElement('source');
     source_large.setAttribute('media', '(max-width:1200px)');
-    source_large.setAttribute('srcset', `/img/${imgName}-550.jpg 1x, /img/${imgName}-800.jpg 2x`);
+    source_large.setAttribute('srcset', `/img/${imgName}-550.webp 1x, /img/${imgName}-800.webp 2x`);
 
     const image = document.createElement('img');
-    image.src = `/img/${imgName}-800.jpg`;
+    image.src = `/img/${imgName}-800.webp`;
     image.className = 'restaurant-img';
     image.id = 'restaurant-img';
     image.alt = restaurant.name;

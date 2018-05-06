@@ -83,7 +83,7 @@ self.addEventListener('fetch', function(event) {
  */
 const serveImages = (request) => {
 
-  var storageUrl = request.url.replace(/-\d{3}.jpg$/, '') + '.jpg';
+  var storageUrl = request.url.replace(/-\d{3}.webp$/, '') + '.webp';
 
   return caches.open(contentImgsCache).then(function(cache) {
     return cache.match(storageUrl).then(function(response) {

@@ -204,11 +204,11 @@ class DBHelper {
    * Restaurant image URL.
    */
   imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}.jpg`);
+    return (`/img/${restaurant.photograph}.jpf`);
   }
 
   imageNameForRestaurant(restaurant) {
-    return (restaurant.photograph || '5.jpg').replace(/\.jpg$/, '');
+    return (restaurant.photograph || '5.jpf').replace(/\.jpf$/, '');
   }
 
   /**
