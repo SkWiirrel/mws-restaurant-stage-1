@@ -17,8 +17,7 @@ gulp.task('default', ['copy-html-and-assets', 'styles', 'scripts'], function() {
   gulp.watch('dist/*.html').on('change', browserSync.reload);
 
   browserSync.init({
-    server: './dist',
-    https: true
+    server: './dist'
   });
 });
 

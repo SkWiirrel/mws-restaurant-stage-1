@@ -1,15 +1,31 @@
-  #restaurants-list li {
-    width: calc(50% - (10px * 2));
-  }
-  .filter-options select {
-    width: 20%;
-  }
-  .filter-options select:last-of-type {
-    margin-left: 0;
-  }
-  .restaurant-section {
-    width: 50%;
-  }
-  #restraunt-location {
-    margin: 70px 30px 20px;
-  }
+#restaurants-list li {
+  width: calc(50% - (10px * 2));
+}
+
+.filter-options select {
+  width: 20%;
+}
+
+.filter-options select:last-of-type {
+  margin-left: 0;
+}
+
+.restaurant-section {
+  width: 50%;
+}
+
+#restraunt-location {
+  margin: 70px 30px 20px;
+}
+
+.form-group{
+  flex-wrap: nowrap;
+}
+
+.form-group label{
+  width: 15%;
+}
+
+.form-group input, .form-group textarea {
+  width: 85%;
+}

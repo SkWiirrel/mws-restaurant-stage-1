@@ -10,6 +10,9 @@ class DBHelper {
       upgradeDb.createObjectStore('restaurants', {
         keyPath: 'id'
       });
+      upgradeDb.createObjectStore('reviews', {
+        keyPath: 'id'
+      }).createIndex('restaurant_id', 'restaurant_id');
     });
   }
 
@@ -19,7 +22,7 @@ class DBHelper {
    */
   get DATABASE_URL() {
     const port = 1337; // Change this to your server port
-    return `//localhost:${port}/restaurants`;
+    return `//localhost:${port}/`;
   }
 
   /**
@@ -38,7 +41,7 @@ class DBHelper {
       callback([true, restaurants]);
 
       // Get restaurants from the web
-      fetch(this.DATABASE_URL)
+      fetch(this.DATABASE_URL + 'restaurants')
         .then(response => response.json())
         .then(data => {
           callback([true, data]);
@@ -72,7 +75,7 @@ class DBHelper {
       callback([true, restaurant]);
 
       // Get restaurants from the web
-      fetch(this.DATABASE_URL + `/${id}`)
+      fetch(this.DATABASE_URL + `restaurants/${id}`)
         .then(response => response.json())
         .then(data => {
           callback([true, data]);
@@ -99,9 +102,39 @@ class DBHelper {
         callback(!ok, response);
       } else {
         callback(ok, response);
-        //callback(null, 'Restaurant does not exist');
       }
     }, id);
+  }
+
+  fetchReviewsByRestaurantId(restaurant_id, callback) {
+
+    this.dbPromise.then(db => {
+      return db.transaction('reviews').objectStore('reviews').index('restaurant_id').getAll(parseInt(restaurant_id));
+    }).then(reviews => {
+      console.log(reviews);
+      // Display restaurants from the database
+      callback([true, reviews]);
+
+      // Get restaurants from the web
+      fetch(this.DATABASE_URL + `reviews/?restaurant_id=${restaurant_id}`)
+        .then(response => response.json())
+        .then(data => {
+          callback([true, data]);
+
+          // Add restaurants from the web to the database
+          this.dbPromise.then(db => {
+            const tx = db.transaction('reviews', 'readwrite');
+            const store = tx.objectStore('reviews');
+
+            for (const review of data) {
+              store.put(review);
+            }
+
+            return tx.complete;
+          });
+        })
+        .catch(error => callback([false, error]));
+    });
   }
 
   /**

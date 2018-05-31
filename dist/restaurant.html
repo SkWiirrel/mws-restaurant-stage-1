@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/styles-min-w-750.css" media="screen and (min-width:750px)">
   <link rel="stylesheet" href="css/styles-min-w-1200.css" media="screen and (min-width:1200px)">
   <link rel="manifest" href="manifest/manifest.json">
   <title>Restaurant Detail</title>
-  <meta name="theme-color" content="#252831"/>
+  <meta name="theme-color" content="#252831" />
   <meta name="description" content="Restaurant Reviews" />
   <meta name="author" content="Patrick Schulteis">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
@@ -64,7 +65,26 @@
     <!-- end restaurant -->
     <!-- Beginning reviews -->
     <section id="reviews-container">
+      <h3>Reviews</h3>
       <ul id="reviews-list"></ul>
+      <div class="reviews-form-container">
+        <form method="POST" action="http://localhost:1337/reviews/">
+          <div class="form-group">
+            <label for="name">Name <span class="required"></label>
+            <input name="name" id="name" placeholder="Max Mustermann" required>
+          </div>
+          <div class="form-group">
+            <label for="rating">Rating <span class="required"></label>
+            <input name="rating" id="rating" type="number" placeholder="5" max="5" min="1" value="5" required>
+          </div>
+          <div class="form-group">
+            <label for="comments">Comments</label>
+            <textarea name="comments" id="comments"></textarea>
+          </div>
+          <button type="submit">Submit Review</button>
+        </form>
+        <input type="hidden" name="restaurant_id" id="restaurant_id" required>
+      </div>
     </section>
     <!-- End reviews -->
   </main>

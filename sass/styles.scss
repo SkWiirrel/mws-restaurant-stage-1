@@ -50,6 +50,33 @@ figure {
   margin: 0;
 }
 
+.reviews-form-container {
+  width: 100%;
+}
+
+.form-group {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.form-group label{
+  width: 100%;
+  vertical-align: top;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.form-group input, .form-group textarea {
+  width: 100%;
+  margin:2px 0;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
 #maincontent {
   background-color: #f3f3f3;
   min-height: 100%;
@@ -218,7 +245,7 @@ figure {
   font-size: 11pt;
 }
 
-#restaurants-list li a {
+#restaurants-list li a, .reviews-form-container button {
   background-color: orange;
   border-bottom: 3px solid #eee;
   color: #fff;
@@ -295,6 +322,12 @@ figure {
   width: 100%;
 }
 
+#restaurant-cuisine:empty{
+  background: none;
+  padding: 0;
+  margin: 0;
+}
+
 #restaurant-container, #reviews-container {
   border-bottom: 1px solid #d9d9d9;
   border-top: 1px solid #fff;
@@ -318,6 +351,12 @@ figure {
   font-weight: 300;
   letter-spacing: -1px;
   padding-bottom: 1pt;
+  width: 100%;
+}
+
+#reviews-container .no-reviews-yet {
+  width: 100%;
+  padding-top: 0;
 }
 
 #reviews-list {
@@ -364,6 +403,17 @@ figure {
 #reviews-list .reviews-date {
   color: darkgray;
   margin-left: 5px;
+}
+
+.reviews-form-container button {
+  float:right;
+  border: 0;
+  cursor: pointer;
+}
+
+.required:after{
+  content: '*';
+  color: red;
 }
 
 #restaurant-hours:not(:empty) {

@@ -1,6 +1,23 @@
 /*jshint esversion: 6 */
 
-let restaurant, map;
+/**
+ * Get a parameter by name from page URL.
+ */
+const getParameterByName = (name, url) => {
+  if (!url)
+    url = window.location.href;
+  name = name.replace(/[\[\]]/g, '\\$&');
+  const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),
+    results = regex.exec(url);
+  if (!results)
+    return null;
+  if (!results[2])
+    return '';
+  return decodeURIComponent(results[2].replace(/\+/g, ' '));
+};
+
+
+let restaurant, map, restaurantId = getParameterByName('id');
 const dbHelper = new DBHelper();
 
 
@@ -29,24 +46,31 @@ window.initMap = () => {
  */
 const fillRestaurantErrorHTML = () => {
   document.getElementById('restaurant-name').innerHTML = 'No restaurant found!';
+  var reviewsContainer = document.getElementById("reviews-container");
+  reviewsContainer.parentNode.removeChild(reviewsContainer);
 };
 
 /**
  * Get current restaurant from page URL.
  */
 const fetchRestaurantFromURL = (callback) => {
-  if (self.restaurant) { // restaurant already fetched!
+  /*if (self.restaurant) { // restaurant already fetched!
     callback(null, self.restaurant);
     return;
-  }
-  const id = getParameterByName('id');
-  if (!id) { // no id found in URL
+  }*/
+  if (!restaurantId || isNaN(restaurantId)) { // no id found in URL
     fillRestaurantErrorHTML();
   } else {
-    dbHelper.fetchRestaurantById(id, (ok, restaurant) => {
+
+    document.getElementById('restaurant_id').value = restaurantId;
+
+    dbHelper.fetchRestaurantById(restaurantId, (ok, restaurant) => {
+
       self.restaurant = restaurant;
 
-      if (!ok || restaurant instanceof Error || !restaurant) {
+      if (ok && !restaurant) {
+        return;
+      } else if (!ok || restaurant instanceof Error) {
         console.error(restaurant);
         fillRestaurantErrorHTML();
         return;
@@ -133,22 +157,28 @@ const fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hour
  * Create all reviews HTML and add them to the webpage.
  */
 const fillReviewsHTML = (reviews = self.restaurant.reviews) => {
-  const container = document.getElementById('reviews-container');
-  const title = document.createElement('h3');
-  title.innerHTML = 'Reviews';
-  container.appendChild(title);
 
-  if (!reviews) {
-    const noReviews = document.createElement('p');
-    noReviews.innerHTML = 'No reviews yet!';
-    container.appendChild(noReviews);
-    return;
-  }
-  const ul = document.getElementById('reviews-list');
-  reviews.forEach(review => {
-    ul.appendChild(createReviewHTML(review));
+   dbHelper.fetchReviewsByRestaurantId(restaurantId, ([ok = false, reviews]) => {
+
+    const container = document.getElementById('reviews-container');
+    const ul = document.getElementById('reviews-list');
+    ul.innerHTML = '';
+
+    if (ok && !reviews) {
+      const noReviews = document.createElement('li');
+      noReviews.className = 'no-reviews-yet';
+      noReviews.innerHTML = 'No reviews yet. Be the first one!';
+      ul.appendChild(noReviews);
+      return;
+    } else if (!ok || reviews instanceof Error) {
+      console.error(reviews);
+      return;
+    }
+
+    reviews.forEach(review => {
+      ul.appendChild(createReviewHTML(review));
+    });
   });
-  container.appendChild(ul);
 };
 
 /**
@@ -163,7 +193,8 @@ const createReviewHTML = (review) => {
 
   const date = document.createElement('small');
   date.className = 'reviews-date';
-  date.innerHTML = review.date;
+  var createdAt = new Date(review.createdAt);
+  date.innerHTML = `${createdAt.toLocaleDateString()} - ${createdAt.toLocaleTimeString()}`;
   name.appendChild(date);
 
   const comments = document.createElement('p');
@@ -191,20 +222,4 @@ const fillBreadcrumb = (restaurant = self.restaurant) => {
     li.innerHTML = restaurant.name;
     breadcrumb.appendChild(li);
   }
-};
-
-/**
- * Get a parameter by name from page URL.
- */
-const getParameterByName = (name, url) => {
-  if (!url)
-    url = window.location.href;
-  name = name.replace(/[\[\]]/g, '\\$&');
-  const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),
-    results = regex.exec(url);
-  if (!results)
-    return null;
-  if (!results[2])
-    return '';
-  return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
