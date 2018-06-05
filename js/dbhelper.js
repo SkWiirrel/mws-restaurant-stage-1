@@ -15,7 +15,7 @@ class DBHelper {
       }).createIndex('restaurant_id', 'restaurant_id');
 
       upgradeDb.createObjectStore('reviews-to-submit', {
-        keyPath: 'id',
+        keyPath: 'cache_id',
         autoIncrement: true
       }).createIndex('restaurant_id', 'restaurant_id');
     });
@@ -288,10 +288,10 @@ class DBHelper {
 
   }
 
-  deleteCachedReview(id) {
+  deleteCachedReview(cache_id) {
     return this.dbPromise.then(db => {
-      return db.transaction('reviews-to-submit', 'readwrite').objectStore('reviews-to-submit').delete(id);
-    }).catch(error => console.error(`Wasn't able to delete cached review submission of ID: ${id}`, error));
+      return db.transaction('reviews-to-submit', 'readwrite').objectStore('reviews-to-submit').delete(cache_id);
+    }).catch(error => console.error(`Wasn't able to delete cached review submission of ID: ${cache_id}`, error));
   }
 
   submitCachedReview(restaurant_id) {
@@ -309,7 +309,7 @@ class DBHelper {
         this.submitReview(cachedReview, ([ok = false, review] = []) => {
 
           if (ok) {
-            this.deleteCachedReview(cachedReview.id);
+            this.deleteCachedReview(cachedReview.cache_id);
           }
 
         });
