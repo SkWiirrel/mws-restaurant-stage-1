@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 
-const staticCache = 'res-staticStuff-v22';
+const staticCache = 'res-staticStuff-v24';
 const contentImgsCache = 'res-contentImgStuff';
 const allCaches = [
   staticCache,
@@ -17,6 +17,7 @@ self.addEventListener('install', function(event) {
     caches.open(staticCache).then(function(cache) {
       return cache.addAll([
         '/',
+        '/restaurant.html',
         '/manifest/manifest.json',
         'css/styles.css',
         'css/styles-min-w-750.css',

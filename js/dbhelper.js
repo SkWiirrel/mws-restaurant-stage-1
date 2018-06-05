@@ -13,6 +13,11 @@ class DBHelper {
       upgradeDb.createObjectStore('reviews', {
         keyPath: 'id'
       }).createIndex('restaurant_id', 'restaurant_id');
+
+      upgradeDb.createObjectStore('reviews-to-submit', {
+        keyPath: 'id',
+        autoIncrement: true
+      }).createIndex('restaurant_id', 'restaurant_id');
     });
   }
 
@@ -111,7 +116,6 @@ class DBHelper {
     this.dbPromise.then(db => {
       return db.transaction('reviews').objectStore('reviews').index('restaurant_id').getAll(parseInt(restaurant_id));
     }).then(reviews => {
-      console.log(reviews);
       // Display restaurants from the database
       callback([true, reviews]);
 
@@ -256,6 +260,62 @@ class DBHelper {
       animation: google.maps.Animation.DROP
     });
     return marker;
+  }
+
+  submitReview(jsonFormData, callback) {
+
+    fetch(this.DATABASE_URL + 'reviews', {
+        method: 'POST',
+        headers: new Headers({
+          "Content-Type": "application/json",
+        }),
+        body: JSON.stringify(jsonFormData)
+      })
+      .then(rawData => rawData.json())
+      .then(newReview => {
+        callback([true, newReview]);
+      })
+      .catch(error => callback([false, error]));
+  }
+
+  cacheReviewSubmission(jsonFormData) {
+
+    this.dbPromise.then(db => {
+
+      return db.transaction('reviews-to-submit', 'readwrite').objectStore('reviews-to-submit').put(jsonFormData);
+
+    }).catch(error => console.error('Wasn\'t able to cache review submission'));
+
+  }
+
+  deleteCachedReview(id) {
+    return this.dbPromise.then(db => {
+      return db.transaction('reviews-to-submit', 'readwrite').objectStore('reviews-to-submit').delete(id);
+    }).catch(error => console.error(`Wasn't able to delete cached review submission of ID: ${id}`, error));
+  }
+
+  submitCachedReview(restaurant_id) {
+    this.dbPromise.then(db => {
+      return db.transaction('reviews-to-submit').objectStore('reviews-to-submit').index('restaurant_id').getAll(restaurant_id);
+    }).then(cachedReviews => {
+
+      //There are no cached reviews waiting for submission
+      if (!cachedReviews.length) {
+        return;
+      }
+
+      for (const cachedReview of cachedReviews) {
+
+        this.submitReview(cachedReview, ([ok = false, review] = []) => {
+
+          if (ok) {
+            this.deleteCachedReview(cachedReview.id);
+          }
+
+        });
+      }
+
+    }).catch(error => console.info(`Wasn't able get cached review submissions of restaurant ID: ${restaurant_id}`, error));
   }
 
 }

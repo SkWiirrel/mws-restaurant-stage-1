@@ -17,15 +17,16 @@ const getParameterByName = (name, url) => {
 };
 
 
-let restaurant, map, restaurantId = getParameterByName('id');
+let map, restaurantId = parseInt(getParameterByName('id'));
 const dbHelper = new DBHelper();
-
+self.reviews = [];
 
 /**
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
   fetchRestaurantFromURL((ok, restaurant) => {
+
     if (!ok) { // Got an error!
       console.error(restaurant);
       return;
@@ -65,16 +66,19 @@ const fetchRestaurantFromURL = (callback) => {
     document.getElementById('restaurant_id').value = restaurantId;
 
     dbHelper.fetchRestaurantById(restaurantId, (ok, restaurant) => {
-
-      self.restaurant = restaurant;
-
+      //Cache was correctly hit but nothing in there
       if (ok && !restaurant) {
         return;
-      } else if (!ok || restaurant instanceof Error) {
+      }
+      //An error occured and we don't have a restaurant yet (from cache)
+      else if ((!ok /*|| restaurant instanceof Error*/ ) && !self.restaurant) {
         console.error(restaurant);
         fillRestaurantErrorHTML();
         return;
       }
+
+      //Restraurant was correctly fetched either from cache or server
+      self.restaurant = restaurant;
       fillRestaurantHTML();
       callback(true, restaurant);
     });
@@ -128,9 +132,12 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
     if (restaurant.operating_hours) {
       fillRestaurantHoursHTML();
     }
+
     // fill reviews
+    dbHelper.submitCachedReview(restaurantId);
     fillReviewsHTML();
   }
+
 };
 
 /**
@@ -156,36 +163,52 @@ const fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hour
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-const fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+const fillReviewsHTML = () => {
 
-   dbHelper.fetchReviewsByRestaurantId(restaurantId, ([ok = false, reviews]) => {
+    dbHelper.fetchReviewsByRestaurantId(restaurantId, ([ok = false, reviews]) => {
 
-    const container = document.getElementById('reviews-container');
-    const ul = document.getElementById('reviews-list');
-    ul.innerHTML = '';
+      const container = document.getElementById('reviews-container');
+      const ul = document.getElementById('reviews-list');
 
-    if (ok && !reviews) {
-      const noReviews = document.createElement('li');
-      noReviews.className = 'no-reviews-yet';
-      noReviews.innerHTML = 'No reviews yet. Be the first one!';
-      ul.appendChild(noReviews);
-      return;
-    } else if (!ok || reviews instanceof Error) {
-      console.error(reviews);
-      return;
-    }
+      if (ok && !reviews) {
 
-    reviews.forEach(review => {
-      ul.appendChild(createReviewHTML(review));
+        ul.innerHTML = '';
+        const noReviews = document.createElement('li');
+        noReviews.id = 'no-reviews-yet';
+        noReviews.innerHTML = 'No reviews yet. Be the first one!';
+        ul.appendChild(noReviews);
+        return;
+
+      } else if (!ok || reviews instanceof Error) {
+
+        console.error(reviews);
+        return;
+
+      }
+
+      //Make sure the reviews are sorted descending by createdAt date
+      reviews.sort(function(a, b){
+        return a.createdAt - b.createdAt;
+      });
+
+      ul.innerHTML = '';
+      reviews.forEach(review => {
+            ul.appendChild(createReviewHTML(review));
+      });
+
+      self.reviews = reviews;
+
     });
-  });
 };
 
 /**
  * Create review HTML and add it to the webpage.
  */
 const createReviewHTML = (review) => {
+
   const li = document.createElement('li');
+  li.id = `review-${review.id}`;
+
   const name = document.createElement('div');
   name.className = 'reviews-author';
   name.innerHTML = review.name;
@@ -193,7 +216,7 @@ const createReviewHTML = (review) => {
 
   const date = document.createElement('small');
   date.className = 'reviews-date';
-  var createdAt = new Date(review.createdAt);
+  const createdAt = new Date(review.createdAt);
   date.innerHTML = `${createdAt.toLocaleDateString()} - ${createdAt.toLocaleTimeString()}`;
   name.appendChild(date);
 
@@ -223,3 +246,33 @@ const fillBreadcrumb = (restaurant = self.restaurant) => {
     breadcrumb.appendChild(li);
   }
 };
+
+document.getElementById('form-submit-review').addEventListener('submit', function(e) {
+
+  e.preventDefault();
+
+  const now = new Date().getTime();
+  let json = {
+    createdAt: now,
+    updatedAt: now
+  };
+
+  for (const pair of new FormData(this).entries()) {
+    //Parse restaurant_id and rating as Integer
+    json[pair[0]] = (pair[0] == 'restaurant_id' || pair[0] == 'rating') ? parseInt(pair[1]) : pair[1];
+  }
+
+  this.reset();
+
+  dbHelper.submitReview(json, ([ok = false, newReview] = []) => {
+
+    if(!ok){
+        dbHelper.cacheReviewSubmission(json);
+        console.info('Cached Review', json);
+        console.error(newReview);
+    }
+
+    document.getElementById('reviews-list').appendChild(createReviewHTML(json));
+  });
+
+});
