@@ -266,13 +266,20 @@ document.getElementById('form-submit-review').addEventListener('submit', functio
 
   dbHelper.submitReview(json, ([ok = false, newReview] = []) => {
 
+
     if(!ok){
-        dbHelper.cacheReviewSubmission(json);
-        console.info('Cached Review', json);
         console.error(newReview);
+
+        if(confirm("The server or you are currently offline!\nWould you like to cache the review submission for a later?")){
+
+          document.getElementById('reviews-list').appendChild(createReviewHTML(json));
+          dbHelper.cacheReviewSubmission(json);
+          console.info('Cached Review', json);
+        }
+    }else{
+      document.getElementById('reviews-list').appendChild(createReviewHTML(json));
     }
 
-    document.getElementById('reviews-list').appendChild(createReviewHTML(json));
   });
 
 });

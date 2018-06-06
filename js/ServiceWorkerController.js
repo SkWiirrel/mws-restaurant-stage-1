@@ -8,9 +8,11 @@ class ServiceWorkerController {
    *  Register the Service Worker
    */
   _registerServiceWorker() {
-    if (!navigator.serviceWorker) return;
-    navigator.serviceWorker.register('sw.js');
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.register('sw.js');
+    }
   }
+
 }
 
 new ServiceWorkerController();
