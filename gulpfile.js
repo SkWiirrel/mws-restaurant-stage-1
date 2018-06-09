@@ -29,7 +29,7 @@ gulp.task('dist', [
 ]);
 
 gulp.task('scripts', function() {
-  gulp.src(['js/lib/*.js', 'js/dbhelper.js', 'js/ServiceWorkerController.js'])
+  gulp.src(['js/ServiceWorkerController.js', 'js/lib/*.js', 'js/dbhelper.js'])
     .pipe(concat('commons.js'))
     .pipe(gulp.dest('dist/js'))
     .pipe(browserSync.stream());
@@ -47,7 +47,7 @@ gulp.task('scripts-dist', function() {
 
   const dest = 'dist/js';
 
-  gulp.src(['js/lib/*.js', 'js/dbhelper.js', 'js/ServiceWorkerController.js'])
+  gulp.src(['js/ServiceWorkerController.js', 'js/lib/*.js', 'js/dbhelper.js'])
     .pipe(sourcemaps.init())
     .pipe(babel({
       presets: ['es2015']

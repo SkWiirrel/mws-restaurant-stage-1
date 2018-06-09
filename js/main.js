@@ -103,7 +103,8 @@ window.initMap = () => {
     center: loc,
     scrollwheel: false
   });
-  updateRestaurants();
+  console.log('INITMAP');
+//  updateRestaurants();
 };
 
 /**
@@ -117,6 +118,7 @@ const updateRestaurants = () => {
   const neighborhood = nSelect[nSelect.selectedIndex].value;
 
   dbHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (ok, restaurants) => {
+    console.log(restaurants);
     if (!ok) { // Got an error!
       console.error(restaurants);
     } else {
@@ -131,7 +133,7 @@ const updateRestaurants = () => {
  */
 const resetRestaurants = (restaurants) => {
   // Remove all restaurants
-  self.restaurants = [];
+  //self.restaurants = [];
   const ul = document.getElementById('restaurants-list');
 
   const pictures = ul.querySelectorAll('picture');
@@ -189,8 +191,10 @@ const createRestaurantHTML = (restaurant) => {
 
   intersectionObserver.observe(picture);
 
+  const isFavourite = (restaurant.is_favorite === 'true' || (typeof(restaurant.is_favorite) === "boolean" && restaurant.is_favorite));
+
   const caption = document.createElement('figcaption');
-  caption.innerHTML = `${restaurant.cuisine_type} Restaurant`;
+  caption.innerHTML = `${restaurant.cuisine_type} Restaurant` + ((isFavourite) ? '<span aria-label="Favourite Restaurant"> &#9733;</span>' : '');
   figure.append(caption);
 
   li.append(figure);
@@ -240,4 +244,5 @@ const addMarkersToMap = (restaurants = self.restaurants) => {
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchNeighborhoods();
   fetchCuisines();
+  updateRestaurants();
 });

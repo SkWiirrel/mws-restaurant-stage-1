@@ -18,6 +18,11 @@ class DBHelper {
         keyPath: 'cache_id',
         autoIncrement: true
       }).createIndex('restaurant_id', 'restaurant_id');
+
+      upgradeDb.createObjectStore('favourite-to-submit', {
+        keyPath: 'restaurant_id',
+      });
+
     });
   }
 
@@ -104,7 +109,7 @@ class DBHelper {
     // fetch all restaurants with proper error handling.
     this.fetchRestaurant(([ok = false, response] = []) => {
       if (!ok) {
-        callback(!ok, response);
+        callback(ok, response);
       } else {
         callback(ok, response);
       }
@@ -148,7 +153,7 @@ class DBHelper {
     // Fetch all restaurants  with proper error handling
     this.fetchRestaurants(([ok = false, response] = []) => {
       if (!ok) {
-        callback(!ok, response);
+        callback(ok, response);
       } else {
         // Filter restaurants to have only given cuisine type
         const results = response.filter(r => r.cuisine_type == cuisine);
@@ -164,7 +169,7 @@ class DBHelper {
     // Fetch all restaurants
     this.fetchRestaurants(([ok = false, response] = []) => {
       if (!ok) {
-        callback(!ok, response);
+        callback(ok, response);
       } else {
         // Filter restaurants to have only given neighborhood
         const results = response.filter(r => r.neighborhood == neighborhood);
@@ -180,7 +185,7 @@ class DBHelper {
     // Fetch all restaurants
     this.fetchRestaurants(([ok = false, response] = []) => {
       if (!ok) {
-        callback(!ok, response);
+        callback(ok, response);
       } else {
         let results = response;
         if (cuisine != 'all') { // filter by cuisine
@@ -201,7 +206,7 @@ class DBHelper {
     // Fetch all restaurants
     this.fetchRestaurants(([ok = false, response] = []) => {
       if (!ok) {
-        callback(!ok, response);
+        callback(ok, response);
       } else {
         // Get all neighborhoods from all restaurants
         const neighborhoods = response.map((v, i) => response[i].neighborhood);
@@ -219,7 +224,8 @@ class DBHelper {
     // Fetch all restaurants
     this.fetchRestaurants(([ok = false, response] = []) => {
       if (!ok) {
-        callback(!ok, response);
+        callback(
+          ok, response);
       } else {
         // Get all cuisines from all restaurants
         const cuisines = response.map((v, i) => response[i].cuisine_type);
@@ -318,4 +324,49 @@ class DBHelper {
     }).catch(error => console.info(`Wasn't able get cached review submissions of restaurant ID: ${restaurant_id}`, error));
   }
 
+  submitCachedFavouriteRestaurant(restaurant_id) {
+    const thisdbPromise = this.dbPromise;
+    thisdbPromise.then(db => {
+      return db.transaction('favourite-to-submit').objectStore('favourite-to-submit').get(restaurant_id);
+    }).then(cachedRestaurant => {
+      if (cachedRestaurant) {
+        this.togglefavouriteRestaurant(restaurant_id, cachedRestaurant.is_favorite, function(ok) {
+          if (ok) {
+            thisdbPromise.then(db => {
+              db.transaction('favourite-to-submit', 'readwrite').objectStore('favourite-to-submit').delete(restaurant_id);
+            });
+          }
+        });
+      }
+    });
+  }
+
+  togglefavouriteRestaurant(restaurant_id, checked, callback) {
+    fetch(this.DATABASE_URL + `restaurants/${restaurant_id}/?is_favorite=${checked}`, {
+        method: 'PUT'
+      }).then(rawData => rawData.json())
+      .then(restaurant => {
+        this.dbPromise.then(db => {
+          const tx = db.transaction('restaurants', 'readwrite');
+          tx.objectStore('restaurants').put(restaurant);
+          if (callback) {
+            callback(tx.complete);
+          }
+          return tx.complete;
+        });
+      })
+      .catch(error => {
+        this.dbPromise.then(db => {
+          const tx = db.transaction('favourite-to-submit', 'readwrite');
+          tx.objectStore('favourite-to-submit', 'readwrite').put({
+            restaurant_id: restaurant_id,
+            is_favorite: checked
+          });
+          if (callback) {
+            callback(false);
+          }
+          return tx.complete;
+        });
+      });
+  }
 }

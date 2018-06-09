@@ -90,16 +90,20 @@ const fetchRestaurantFromURL = (callback) => {
  */
 const fillRestaurantHTML = (restaurant = self.restaurant) => {
 
-  const name = document.getElementById('restaurant-name');
-  name.innerHTML = restaurant.name;
-
-  const address = document.getElementById('restaurant-address');
-  address.innerHTML = restaurant.address;
-
-  const imgName = dbHelper.imageNameForRestaurant(restaurant);
-
   const picture_container = document.getElementById('restaurant-pic-container');
+  let favouriteCheckbox = document.getElementById('favourite-restaurant');
+  //OOTB restaurant got the value saved as booleans, newly added ones as string :-/
+  favouriteCheckbox.checked = (restaurant.is_favorite === 'true' || (typeof(restaurant.is_favorite) === "boolean" && restaurant.is_favorite));
+
   if (picture_container.querySelector('picture') === null) {
+
+    const name = document.getElementById('restaurant-name');
+    name.innerHTML = restaurant.name;
+
+    const address = document.getElementById('restaurant-address');
+    address.innerHTML = restaurant.address;
+
+    const imgName = dbHelper.imageNameForRestaurant(restaurant);
 
     const picture = document.createElement('picture');
 
@@ -133,8 +137,11 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
       fillRestaurantHoursHTML();
     }
 
+    favouriteCheckbox.addEventListener('change', togglefavouriteRestaurant);
+
     // fill reviews
     dbHelper.submitCachedReview(restaurantId);
+    dbHelper.submitCachedFavouriteRestaurant(restaurantId);
     fillReviewsHTML();
   }
 
@@ -238,8 +245,9 @@ const createReviewHTML = (review) => {
  * Add restaurant name to the breadcrumb navigation menu
  */
 const fillBreadcrumb = (restaurant = self.restaurant) => {
+
   const breadcrumb = document.getElementById('breadcrumb');
-  if (breadcrumb.querySelector(`#crumb-restaurant-${restaurant.id}`) === null) {
+  if (breadcrumb.querySelector(`#crumb-restaurant-${restaurantId}`) === null) {
     const li = document.createElement('li');
     li.id = `crumb-restaurant-${restaurant.id}`;
     li.innerHTML = restaurant.name;
@@ -283,3 +291,7 @@ document.getElementById('form-submit-review').addEventListener('submit', functio
   });
 
 });
+
+const togglefavouriteRestaurant = function(){
+    dbHelper.togglefavouriteRestaurant(restaurantId, this.checked);
+};

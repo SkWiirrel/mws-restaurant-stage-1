@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 
-const staticCache = 'res-staticStuff-v24';
+const staticCache = 'res-staticStuff-v26';
 const contentImgsCache = 'res-contentImgStuff';
 const allCaches = [
   staticCache,
@@ -18,7 +18,7 @@ self.addEventListener('install', function(event) {
       return cache.addAll([
         '/',
         '/restaurant.html',
-        '/manifest/manifest.json',
+        'manifest/manifest.json',
         'css/styles.css',
         'css/styles-min-w-750.css',
         'css/styles-min-w-1200.css',
@@ -68,7 +68,7 @@ self.addEventListener('fetch', function(event) {
   }
 
   event.respondWith(
-    caches.match(event.request).then(function(response) {
+    caches.match(event.request, {ignoreSearch:true}).then(function(response) {
       return response || fetch(event.request);
     })
   );
